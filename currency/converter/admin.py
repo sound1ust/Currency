@@ -4,7 +4,7 @@ from .models import Converter
 
 @admin.register(Converter)
 class ConverterAdmin(admin.ModelAdmin):
-    list_display = ('created_at', 'original_currency', 'target_currency', 'value', 'coefficient',
+    list_display = ('id', 'created_at', 'original_currency', 'target_currency', 'value', 'coefficient',
                     'source', 'source_date', 'updated_at', 'updated_by')
     list_filter = ('created_at', 'original_currency', 'target_currency', 'value',
                    'source', 'source_date', 'updated_at', 'updated_by')

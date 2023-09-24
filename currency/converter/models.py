@@ -9,6 +9,6 @@ class Converter(models.Model):
     value = models.FloatField()
     coefficient = models.PositiveIntegerField()
     source = models.CharField(max_length=256)
-    source_date = models.DateTimeField(auto_now=True)
+    source_date = models.DateTimeField()
     updated_at = models.DateTimeField()
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE)

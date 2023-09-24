@@ -1,6 +1,7 @@
 import os
 from celery import Celery
 from celery.schedules import crontab
+from datetime import timedelta
 
 
 # Set the default Django settings module for the 'celery' program.
@@ -20,12 +21,12 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
-# app.conf.beat_schedule = {
-#     'get-currency-every-start': {
-#         'task': 'currency.tasks.get_currency',  # path to your task
-#         'schedule': crontab(),  # execute on start
-#     },
-# }
+app.conf.beat_schedule = {
+    'get-currency-every-start': {
+        'task': 'currency.tasks.get_currency',  # path to your task
+        'schedule': timedelta(seconds=15),  # execute on start
+    },
+}
 
 
 if __name__ == '__main__':
