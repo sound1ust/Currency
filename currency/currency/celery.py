@@ -1,6 +1,5 @@
 import os
 from celery import Celery
-from celery.schedules import crontab
 from datetime import timedelta
 
 
@@ -10,7 +9,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'currency.settings')
 app = Celery('currency',
              broker='redis://localhost:6379/0',
              backend='redis://localhost:6379/0',
-             include=['currency.tasks'])
+             include=['converter.tasks'])
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
@@ -23,7 +22,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'get-currency-every-start': {
-        'task': 'currency.tasks.get_currency',  # path to your task
+        'task': 'converter.tasks.get_currency',  # path to your task
         'schedule': timedelta(seconds=15),  # execute on start
     },
 }
