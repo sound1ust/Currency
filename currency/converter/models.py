@@ -3,6 +3,8 @@ from django.contrib.postgres.fields import ArrayField
 
 from django.contrib.auth.models import User
 
+from converter.consts import AUTOLOAD_METHOD_CHOICES
+
 
 class Source(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,3 +27,9 @@ class Converter(models.Model):
     source_date = models.DateTimeField()
     updated_at = models.DateTimeField()
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    autoload_method = models.CharField(
+        max_length=100,
+        verbose_name='Autoload method',
+        choices=AUTOLOAD_METHOD_CHOICES,
+        default=AUTOLOAD_METHOD_CHOICES[0][0],
+    )

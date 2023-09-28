@@ -79,8 +79,8 @@ DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
        'NAME': 'currency_db',
-       'USER': 'pavel',
-       'PASSWORD': 'admin',
+       'USER': 'postgres',
+       'PASSWORD': 'postgres',
        'HOST': 'localhost',  # localhost на локалке
        'PORT': '5432',  # 5432 на локалке (как вариант)
    }
