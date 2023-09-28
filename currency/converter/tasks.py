@@ -31,7 +31,6 @@ def get_currency(source_id):
                 source.base_currency,
             )
             response = method.make_request()
-
         except RequestException as exc:
             if hasattr(exc, 'response'):
                 response = {exc.response.status_code: exc.response.reason}
@@ -45,10 +44,6 @@ def get_currency(source_id):
         source.last_run_result = response
         source.last_time_rune = timezone.now()
         source.save()
-
-
-
-
 
 @shared_task
 def testing():

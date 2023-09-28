@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 
 from converter.consts import AUTOLOAD_METHOD_CHOICES
-
+from django.contrib.postgres.fields import JSONField
 
 class Source(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -13,7 +13,7 @@ class Source(models.Model):
     method = models.CharField(max_length=256)
     tickets = ArrayField(base_field=models.CharField(max_length=3),
                          default=list)
-    # last_run_result = models.CharField(max_length=256)
+    last_run_result = JSONField(default=dict)
     autoload_method = models.CharField(
         max_length=100,
         verbose_name='Autoload method',

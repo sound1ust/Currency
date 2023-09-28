@@ -1,8 +1,9 @@
 import xmltodict
 from datetime import datetime, timedelta
 from abc import ABC, abstractmethod
+from common import exc_raiser
 
-from converter.exceptions import CurrencyNotFoundException
+from converter.exceptions import CurrencyBaseException
 from converter.models import Converter, User
 from requests import request
 
@@ -21,6 +22,7 @@ class BaseMethod(ABC):
         }
         return request_data
 
+    @exc_raiser(CurrencyBaseException)
     def make_request(self):
         raw_response = request(**self.prepare_request())
         raw_response.raise_for_status()
@@ -29,9 +31,7 @@ class BaseMethod(ABC):
 
     @abstractmethod
     def handle_response(self, response):
-        if not response:
-            raise CurrencyNotFoundException
-
+        pass
 
 class CBRFMethod(BaseMethod):
     def __init__(self, tickers, base_currency):
