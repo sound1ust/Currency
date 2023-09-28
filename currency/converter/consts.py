@@ -1,4 +1,4 @@
-from converter.utils import get_ecb_data, get_cbr_data
+from converter.utils import ECBMethod, CBRFMethod
 
 AUTOLOAD_METHOD_CHOICES = [
     ('get_cbr_data', 'get_cbr_data'),
@@ -6,6 +6,6 @@ AUTOLOAD_METHOD_CHOICES = [
 ]
 
 METHODS = {
-        'get_cbr_data': get_cbr_data,
-        'get_ecb_data': get_ecb_data,
+        'get_cbr_data': CBRFMethod,
+        'get_ecb_data': ECBMethod,
     }

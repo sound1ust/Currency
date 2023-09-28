@@ -1,7 +1,56 @@
 import xmltodict
 from datetime import datetime, timedelta
+from abc import ABC, abstractmethod
 
+from converter.exceptions import CurrencyNotFoundException
 from converter.models import Converter, User
+from requests import request
+
+
+class BaseMethod(ABC):
+    def __init__(self, tickers, base_currency):
+        self.base_currency = base_currency
+        self.request_type = 'GET'
+        self.tickers = tickers
+        self.url = ''
+
+    def prepare_request(self):
+        request_data = {
+            'method': self.request_type,
+            'url': self.url
+        }
+        return request_data
+
+    def make_request(self):
+        raw_response = request(**self.prepare_request())
+        raw_response.raise_for_status()
+        response = self.handle_response(raw_response)
+        return response
+
+    @abstractmethod
+    def handle_response(self, response):
+        if not response:
+            raise CurrencyNotFoundException
+
+
+class CBRFMethod(BaseMethod):
+    def __init__(self, tickers, base_currency):
+        super().__init__(tickers, base_currency)
+        self.url = 'https://cbrf'
+        self.base_currency = self.base_currency or 'RUB'
+
+    def handle_response(self, response):
+        pass
+
+
+class ECBMethod(BaseMethod):
+    def __init__(self, tickers, base_currency):
+        super().__init__(tickers, base_currency)
+        self.url = 'https://ecb'
+        self.base_currency = self.base_currency or 'EUR'
+
+    def handle_response(self, response):
+        pass
 
 
 def get_cbr_data(source_obj, response):

@@ -11,10 +11,16 @@ class Source(models.Model):
     is_active = models.BooleanField(default=True)
     name = models.CharField(max_length=10, unique=True)
     method = models.CharField(max_length=256)
-    link = models.CharField(max_length=256)
     tickets = ArrayField(base_field=models.CharField(max_length=3),
                          default=list)
     # last_run_result = models.CharField(max_length=256)
+    autoload_method = models.CharField(
+        max_length=100,
+        verbose_name='Autoload method',
+        choices=AUTOLOAD_METHOD_CHOICES,
+        default=AUTOLOAD_METHOD_CHOICES[0][0],
+    )
+    base_currency = ...
 
 
 class Converter(models.Model):
@@ -27,9 +33,5 @@ class Converter(models.Model):
     source_date = models.DateTimeField()
     updated_at = models.DateTimeField()
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    autoload_method = models.CharField(
-        max_length=100,
-        verbose_name='Autoload method',
-        choices=AUTOLOAD_METHOD_CHOICES,
-        default=AUTOLOAD_METHOD_CHOICES[0][0],
-    )
+
+
