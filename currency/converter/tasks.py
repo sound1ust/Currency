@@ -21,7 +21,16 @@ def get_currency_scheduler():
 @shared_task
 def get_currency(source_id):
     def create_convertors(resp):
-        pass
+        model_dict = {
+            'source_id': source_id,
+            'original_currency': resp.get('filed'),
+        }
+        converter_exists = Converter.objects.filter(
+            ...
+        )
+        if not converter_exists:
+            converter = Converter(**model_dict)
+            converter.save()
 
     source = Source.objects.filter(id=source_id).first()
     if source:

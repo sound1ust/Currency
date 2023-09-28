@@ -24,7 +24,16 @@ class Source(models.Model):
 
 
 class Converter(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+    source_type  = models.ForeignKey(
+        Source,
+        on_delete=models.PROTECT,
+        related_name='converter',
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
     original_currency = models.CharField(max_length=3)
     target_currency = models.CharField(max_length=3)
     value = models.FloatField()
