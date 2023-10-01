@@ -1,21 +1,38 @@
 from django.contrib import admin
 from .models import Converter, Source
 
-
 @admin.register(Converter)
 class ConverterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_at', 'original_currency', 'target_currency',
-                    'value', 'coefficient', 'source', 'source_date',
-                    'updated_at', 'updated_by')
-    list_filter = ('created_at', 'original_currency', 'target_currency',
-                   'value', 'source', 'source_date', 'updated_at',
-                   'updated_by')
-    search_fields = ('created_at', 'original_currency', 'target_currency',
-                     'value', 'coefficient', 'source', 'source_date',
-                     'updated_at', 'updated_by')
-    fields = ('created_at', ('original_currency', 'target_currency'),
-              ('value', 'coefficient'), ('source', 'source_date'),
-              ('updated_at', 'updated_by'))
+    list_display = (
+        'id',
+        'created_at',
+        'input_ticker',
+        'output_ticker',
+        'value',
+        'coefficient',
+        'source_id',
+        'source_date',
+        'updated_by'
+    )
+
+    list_filter = (
+        'created_at',
+        'input_ticker',
+        'output_ticker',
+        'value',
+        'source_id',
+        'source_date',
+        'updated_by'
+    )
+
+    fields = (
+        'created_at',
+        ('input_ticker', 'output_ticker'),
+        ('value', 'coefficient'),
+        ('source_id', 'source_date'),
+        ('updated_by',)
+    )
+
     readonly_fields = ('created_at',)
 
     def has_delete_permission(self, request, obj=None):
@@ -24,12 +41,33 @@ class ConverterAdmin(admin.ModelAdmin):
 
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
-    list_display = ('created_at', 'is_active', 'name',
-                    'method', 'link', 'tickets')
-    list_filter = ('created_at', 'is_active', 'name',
-                   'method', 'link', 'tickets')
-    search_fields = ('created_at', 'is_active', 'name',
-                     'method', 'link', 'tickets')
-    fields = ('created_at', 'is_active', 'name',
-              'method', 'link', 'tickets')
+    list_display = (
+        'id',
+        'created_at',
+        'name',
+        'autoload_method',
+        'base_ticker',
+        'tickers',
+        'last_run_result',
+        'is_active'
+    )
+
+    list_filter = (
+        'created_at',
+        'name',
+        'autoload_method',
+        'base_ticker',
+        'is_active'
+    )
+
+    fields = (
+        'created_at',
+        'name',
+        'autoload_method',
+        'base_ticker',
+        'tickers',
+        'last_run_result',
+        'is_active',
+    )
+
     readonly_fields = ('created_at',)

@@ -22,8 +22,8 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'get-currency-every-start': {
-        'task': 'converter.tasks.get_currency',  # path to your task
-        'schedule': timedelta(seconds=15),  # execute on start
+        'task': 'converter.tasks.get_currency_scheduler',  # path to your task
+        'schedule': timedelta(seconds=10),  # execute on start
     },
 }
 
