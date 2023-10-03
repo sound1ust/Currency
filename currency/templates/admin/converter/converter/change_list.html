@@ -1,0 +1,17 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media }}
+{% endblock %}
+
+{% block filters %}
+    <h3>By Date</h3>
+    <form method="get">
+        {{ form.start_date }}
+        {{ form.end_date }}
+        <input type="submit" value="Filter"/>
+    </form>
+    {{ block.super }}
+{% endblock %}

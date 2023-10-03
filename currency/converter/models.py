@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from converter.consts import AUTOLOAD_METHOD_CHOICES
 from django.contrib.postgres.fields import JSONField
+from converter.validators import validate_source_date
 
 
 class Source(models.Model):
@@ -41,6 +42,11 @@ class Source(models.Model):
         help_text='Shows was there any errors in the last run',
         null=True,
         blank=True,
+    )
+    last_run_time = models.DateTimeField(
+        default=None,
+        blank=True,
+        null=True,
     )
     is_active = models.BooleanField(
         default=True,
@@ -87,6 +93,7 @@ class Converter(models.Model):
     source_date = models.DateTimeField(
         verbose_name='Source date',
         help_text='The source data date',
+        validators=[validate_source_date],
     )
     updated_by = models.ForeignKey(
         User,
