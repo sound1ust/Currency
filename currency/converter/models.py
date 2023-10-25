@@ -76,7 +76,9 @@ class Converter(models.Model):
         verbose_name='Output ticker',
         help_text='Base currency that is using as reference in the source',
     )
-    value = models.FloatField(
+    value = models.DecimalField(
+        max_digits=10,
+        decimal_places=4,
         verbose_name='Value',
     )
     coefficient = models.IntegerField(

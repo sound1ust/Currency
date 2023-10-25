@@ -1,48 +1,51 @@
 class CurrencyBaseException(Exception):
     code = 0
-    message = 'Unknown Exception'
+    base_message = 'Unknown Exception'
+
+    def __init__(self, message=None):
+        self.message = message if message is not None else self.base_message
 
 
 class CurrencyNotFoundException(CurrencyBaseException):
     code = 700
-    message = 'Currency Not Found'
+    base_message = 'Currency Not Found'
 
 
 class CurrencyNotChangeException(CurrencyBaseException):
     code = 701
-    message = "Currency didn't change"
+    base_message = "Currency didn't change"
 
 
 class TickerNotFoundException(CurrencyBaseException):
     code = 800
-    message = 'Ticker not found'
+    base_message = 'Ticker not found'
 
 
 class TickerDataNotFoundException(CurrencyBaseException):
     code = 801
-    message = "Ticker data not found"
+    base_message = "Ticker data not found"
 
 
 class TickerValueNotFoundException(CurrencyBaseException):
     code = 802
-    message = 'Ticker value not found'
+    base_message = 'Ticker value not found'
 
 
 class TickerCoefficientNotFoundException(CurrencyBaseException):
     code = 803
-    message = 'Ticker coefficient not found'
+    base_message = 'Ticker coefficient not found'
 
 
 class SourceDateNotFoundException(CurrencyBaseException):
     code = 900
-    message = 'Source date not found'
+    base_message = 'Source date not found'
 
 
 class NoActiveSourcesException(CurrencyBaseException):
     code = 901
-    message = 'No active sources found'
+    base_message = 'No active sources found'
 
 
 class ValidationErrorException(CurrencyBaseException):
     code = 1000
-    message = 'Validation Error'
+    base_message = "Validation Error"

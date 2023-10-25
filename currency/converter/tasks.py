@@ -67,14 +67,13 @@ def get_currency(source_id):
                 response = {exc.response.status_code: exc.response.reason}
             else:
                 response = {500: 'Connection Error'}
+        try:
+            create_convertors(response)
+            response = dumps(response, cls=ConverterJSONEncoder)
         except CurrencyBaseException as exc:
             response = {exc.code: exc.message}
-        else:
-            try:
-                create_convertors(response)
-                response = dumps(response, cls=ConverterJSONEncoder)
-            except CurrencyBaseException as exc:
-                response = {exc.code: exc.message}
+        except Exception as e:
+            response = {'error': str(e)}
 
         source.last_run_result = response
         source.last_run_time = datetime.now()

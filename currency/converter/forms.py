@@ -14,15 +14,15 @@ class SourceAdminForm(forms.ModelForm):
         fields = '__all__'
 
     def clean(self):
-        data = super().clean()
+        cleaned_data = super().clean()
 
-        if not data.get('autoload_method').startswith('get_'):
+        if not cleaned_data.get('autoload_method').startswith('get_'):
             self.add_error(
                 'autoload_method',
-                "Autoload method must start with 'get_'"
+                "Autoload method must starts with 'get_'"
             )
 
-        return data
+        return cleaned_data
 
 
 class ConverterForm(forms.ModelForm):

@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from decimal import Decimal
 
 
 class ConverterJSONEncoder(json.JSONEncoder):
@@ -7,7 +8,7 @@ class ConverterJSONEncoder(json.JSONEncoder):
         if type(obj).__name__ in ('Source', 'User'):
             return obj.id
 
-        if isinstance(obj, datetime):
+        if isinstance(obj, (datetime, Decimal)):
             return str(obj)
 
         return super().default(obj)
