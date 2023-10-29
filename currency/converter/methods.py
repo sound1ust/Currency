@@ -1,10 +1,12 @@
-from xmltodict import parse
-from json import loads
 from datetime import datetime
 from abc import ABC, abstractmethod
-from converter.exceptions import *
-from requests import request
+from json import loads
 from decimal import Decimal
+
+from xmltodict import parse
+from requests import request
+
+from converter.exceptions import *
 
 
 class BaseMethod(ABC):

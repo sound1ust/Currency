@@ -1,5 +1,7 @@
-from celery import shared_task
+from json import dumps
+from datetime import datetime
 
+from celery import shared_task
 from requests.exceptions import RequestException
 
 from converter.exceptions import CurrencyBaseException, \
@@ -8,8 +10,6 @@ from converter.exceptions import CurrencyBaseException, \
 from converter.models import Converter, User, Source
 from converter.consts import METHODS
 from converter.utils import ConverterJSONEncoder, exc_raiser
-from json import dumps
-from datetime import datetime
 from converter.forms import ConverterForm
 
 

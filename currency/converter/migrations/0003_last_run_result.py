@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('converter', '0002_auto_20230930_1751'),
+        ('converter', '0002_help_texts'),
     ]
 
     operations = [
