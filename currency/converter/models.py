@@ -25,12 +25,12 @@ class Source(models.Model):
         help_text='The name of the method used to extract data from the source',
     )
     base_ticker = models.CharField(
-        max_length=3,
+        max_length=10,
         verbose_name='Base ticker',
         help_text='Base currency that is using as reference in the source',
     )
     tickers = ArrayField(
-        base_field=models.CharField(max_length=3),
+        base_field=models.CharField(max_length=10),
         default=list,
         verbose_name='Tickers',
         help_text='Tickers that are converting from the base one',
@@ -66,18 +66,18 @@ class Converter(models.Model):
         verbose_name='Created at',
     )
     input_ticker = models.CharField(
-        max_length=3,
+        max_length=10,
         verbose_name='Input ticker',
         help_text='The ticker that converting into the base one',
     )
     output_ticker = models.CharField(
-        max_length=3,
+        max_length=10,
         verbose_name='Output ticker',
         help_text='Base currency that is using as reference in the source',
     )
     value = models.DecimalField(
-        max_digits=10,
-        decimal_places=4,
+        max_digits=24,
+        decimal_places=10,
         verbose_name='Value',
     )
     coefficient = models.IntegerField(

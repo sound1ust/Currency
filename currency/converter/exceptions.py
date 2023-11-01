@@ -46,6 +46,21 @@ class NoActiveSourcesException(CurrencyBaseException):
     base_message = 'No active sources found'
 
 
+class SourceDateInvalidException(CurrencyBaseException):
+    code = 902
+    base_message = 'Source date is invalid'
+
+
 class ValidationErrorException(CurrencyBaseException):
     code = 1000
-    base_message = "Validation Error"
+    base_message = 'Validation Error'
+
+
+class ExchangeInfoErrorException(CurrencyBaseException):
+    code = 1100
+    base_message = 'Invalid exchange info'
+
+
+class ExcahngeSymbolNotFoundException(CurrencyBaseException):
+    code = 1101
+    base_message = 'Symbol not found'
