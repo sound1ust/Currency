@@ -1,10 +1,9 @@
-from django.db import models
-from django.contrib.postgres.fields import ArrayField
-from django.contrib.auth.models import User
-
 from converter.consts import AUTOLOAD_METHOD_CHOICES
-from django.contrib.postgres.fields import JSONField
 from converter.validators import validate_source_date
+from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import JSONField
+from django.db import models
 
 
 class Source(models.Model):
@@ -22,12 +21,15 @@ class Source(models.Model):
         verbose_name='Autoload method',
         choices=AUTOLOAD_METHOD_CHOICES,
         default=AUTOLOAD_METHOD_CHOICES[0][0],
-        help_text='The name of the method used to extract data from the source',
+        help_text='The name of the method used to extract data '
+        'from the source',
     )
     base_ticker = models.CharField(
         max_length=10,
         verbose_name='Base ticker',
         help_text='Base currency that is using as reference in the source',
+        blank=True,
+        null=True,
     )
     tickers = ArrayField(
         base_field=models.CharField(max_length=10),
@@ -109,4 +111,4 @@ class Converter(models.Model):
         verbose_name_plural = 'Converters'
 
     def __str__(self):
-        return f"{self.input_ticker} / {self.output_ticker}"
+        return f'{self.input_ticker} / {self.output_ticker}'

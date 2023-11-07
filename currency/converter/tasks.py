@@ -1,16 +1,19 @@
-from json import dumps
 from datetime import datetime
+from json import dumps
 
 from celery import shared_task
-from requests.exceptions import RequestException
-
-from converter.exceptions import CurrencyBaseException, \
-    ValidationErrorException, CurrencyNotChangeException, \
-    NoActiveSourcesException
-from converter.models import Converter, User, Source
 from converter.consts import METHODS
-from converter.utils import ConverterJSONEncoder, exc_raiser
+from converter.exceptions import CurrencyBaseException
+from converter.exceptions import CurrencyNotChangeException
+from converter.exceptions import NoActiveSourcesException
+from converter.exceptions import ValidationErrorException
 from converter.forms import ConverterForm
+from converter.models import Converter
+from converter.models import Source
+from converter.models import User
+from converter.utils import ConverterJSONEncoder
+from converter.utils import exc_raiser
+from requests.exceptions import RequestException
 
 
 @shared_task
@@ -34,7 +37,7 @@ def get_currency(source_id):
                 converter = form.save(commit=False)  # No saving for now
             else:
                 raise ValidationErrorException(
-                    f"Validation error(s) for ticker {ticker}: {form.errors}"
+                    f'Validation error(s) for ticker {ticker}: {form.errors}',
                 )
 
             converter_exists = Converter.objects.filter(
@@ -43,13 +46,15 @@ def get_currency(source_id):
                 output_ticker=converter.output_ticker,
             ).order_by('created_at')
 
-            if not converter_exists or \
-                    converter_exists.last().value != converter.value:
+            if (
+                not converter_exists
+                or converter_exists.last().value != converter.value
+            ):
                 converter.save()  # Now save
             else:
                 raise CurrencyNotChangeException(
-                    f"Currency for {converter.input_ticker}/"
-                    f"{converter.output_ticker} didn't change"
+                    f'Currency for {converter.input_ticker}/'
+                    f"{converter.output_ticker} didn't change",
                 )
 
     source = Source.objects.filter(id=source_id).first()

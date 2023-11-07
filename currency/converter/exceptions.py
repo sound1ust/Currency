@@ -23,7 +23,7 @@ class TickerNotFoundException(CurrencyBaseException):
 
 class TickerDataNotFoundException(CurrencyBaseException):
     code = 801
-    base_message = "Ticker data not found"
+    base_message = 'Ticker data not found'
 
 
 class TickerValueNotFoundException(CurrencyBaseException):
@@ -64,3 +64,13 @@ class ExchangeInfoErrorException(CurrencyBaseException):
 class ExcahngeSymbolNotFoundException(CurrencyBaseException):
     code = 1101
     base_message = 'Symbol not found'
+
+
+class ExchangeInfoInputTickerNotFoundException(CurrencyBaseException):
+    code = 1102
+    base_message = 'Input ticker not found'
+
+
+class ExchangeInfoOutputTickerNotFoundException(CurrencyBaseException):
+    code = 1103
+    base_message = 'Output ticker not found'
