@@ -1,5 +1,7 @@
 from datetime import datetime
+from functools import wraps
 from json import dumps
+from logging import getLogger
 
 from celery import shared_task
 from converter.consts import METHODS
@@ -16,6 +18,23 @@ from converter.utils import exc_raiser
 from requests.exceptions import RequestException
 
 
+logger = getLogger('currency_converter')
+
+
+def task_logger(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+        except Exception as exc:
+            logger.error(f'Error: {func.__name__}: {exc}')
+        else:
+            logger.info(f'Info: {func.__name__}: {result}')
+            return result
+
+    return wrapper
+
+
 @shared_task
 def get_currency_scheduler():
     active_source_types = Source.objects.filter(is_active=True)
@@ -27,6 +46,7 @@ def get_currency_scheduler():
 
 
 @shared_task
+@task_logger
 @exc_raiser(CurrencyBaseException)
 def get_currency(source_id):
     def create_convertors(resp):
@@ -72,14 +92,22 @@ def get_currency(source_id):
                 response = {exc.response.status_code: exc.response.reason}
             else:
                 response = {500: 'Connection Error'}
-        try:
-            create_convertors(response)
-            response = dumps(response, cls=ConverterJSONEncoder)
         except CurrencyBaseException as exc:
             response = {exc.code: exc.message}
         except Exception as e:
             response = {'error': str(e)}
 
+        else:
+            try:
+                create_convertors(response)
+                response = dumps(response, cls=ConverterJSONEncoder)
+            except CurrencyBaseException as exc:
+                response = {exc.code: exc.message}
+            except Exception as e:
+                response = {'error': str(e)}
+
         source.last_run_result = response
         source.last_run_time = datetime.now()
         source.save()
+
+        return response

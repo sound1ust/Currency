@@ -2,3 +2,4 @@
 celerybeat-schedule.db
 dump.rdb
 venv
+converter_logging.log

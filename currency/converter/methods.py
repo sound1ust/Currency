@@ -175,13 +175,16 @@ class CBRMethod(BaseMethod):
         )
 
     def get_ticker_data(self, currency_data, ticker):
-        ticker_data = next(
-            (
-                el
-                for el in currency_data.get('Valute')
-                if el.get('CharCode') == ticker
+        try:
+            ticker_data = next(
+                (
+                    el
+                    for el in currency_data.get('Valute')
+                    if el.get('CharCode') == ticker
+                )
             )
-        )
+        except StopIteration:
+            ticker_data = None
 
         return self.handle_data(
             ticker_data,
