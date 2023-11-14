@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'converter',
 ]
 
@@ -123,7 +124,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# #Celery
+# Celery
 # CELERY_ENABLE_UTC = True
 # CELERY_TIMEZONE = 'UTC'
 
@@ -157,3 +158,19 @@ LOGGING = {
         },
     },
 }
+
+# Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+}
+
+# Cache
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.redis.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379",
+#     }
+# }
