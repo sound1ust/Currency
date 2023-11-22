@@ -7,3 +7,4 @@ redis==3.3.6
 requests==2.31.0
 xmltodict==0.13.0
 importlib-metadata<5.0
+django-redis==5.4.0

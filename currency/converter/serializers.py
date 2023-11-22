@@ -13,10 +13,10 @@ class CurrencyGetSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_rate(obj):
-        value = getattr(obj, 'value')
-        coefficient = getattr(obj, 'coefficient')
+        value = obj.value
+        coefficient = obj.coefficient
 
-        if all((value, coefficient)):
+        if value and coefficient:
             rate = value * coefficient
         else:
             rate = None
