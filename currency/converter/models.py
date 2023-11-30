@@ -112,3 +112,6 @@ class Converter(models.Model):
 
     def __str__(self):
         return f'{self.input_ticker} / {self.output_ticker}'
+
+    def get_field_names(self):
+        return [field.name for field in self._meta.get_fields()]
