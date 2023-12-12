@@ -8,6 +8,5 @@ requests==2.31.0
 xmltodict==0.13.0
 importlib-metadata<5.0
 django-redis==5.4.0
-django-user-tasks==3.1.0
 openpyxl==3.1.2
 dropbox==11.36.2

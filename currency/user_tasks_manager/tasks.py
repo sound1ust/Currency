@@ -1,42 +1,62 @@
-from io import BytesIO
+import os
+from datetime import datetime
 
 import openpyxl
 from celery import shared_task
 from converter.models import Converter
-from dropbox import Dropbox
-from dropbox.exceptions import ApiError
-from dropbox.files import UploadError
 
 from .models import UserTask
+from .models import UserTaskResult
+from currency import settings
 
 
 @shared_task
 def export_task(task_id):
+    time_before = datetime.now()
     task = UserTask.objects.filter(id=task_id).first()
     if not task:
-        task.update_task_status(
-            status='Failure',
-            result="Can't find the task",
-        )
+        # task.update_task_status(
+        #     status='Failure',
+        #     result="Can't find the task",
+        # )
         return None
 
-    task.update_task_status('Started')
+    # task.update_task_status('Started')
+    start_parameters = {
+        'created_at__gte': task.date_from,
+        'created_at__lte': task.date_to,
+        'input_ticker__in': task.input_tickers,
+        'output_ticker__in': task.output_tickers,
+        'value__gte': task.value_from,
+        'value__lte': task.value_to,
+        'source__in': task.sources,
+        'updated_by': task.updated_by,
+    }
+    start_parameters = {
+        key: value for key, value in start_parameters.items() if value
+    }
 
-    converters = Converter.objects.filter(**task.start_parameters)
+    task_result = UserTaskResult.objects.create(
+        name=f"{'_'.join(task.name.split())}",
+        user=task.user,
+        start_date=time_before,
+        start_parameters=start_parameters,
+    )
+
+    converters = Converter.objects.filter(**start_parameters)
     if not converters:
-        task.update_task_status(
-            status='Failure',
-            result='There are no rates with current parameters',
-        )
+        task_result.status = 'FAILURE'
+        task_result.save()
         return None
 
-    create_excel(task, converters)
+    task_result.save()
+    create_excel(task_result, converters)
 
 
-def create_excel(task, converters):
+def create_excel(task_result, converters):
     workbook = openpyxl.Workbook()
     worksheet = workbook.active
-    worksheet.title = f'Currencies of {task.name}'
+    worksheet.title = f'Currencies of {task_result.name}'
 
     header = converters.first().get_field_names()
     for col_num, column_title in enumerate(header, 1):
@@ -48,45 +68,17 @@ def create_excel(task, converters):
             cell = worksheet.cell(row=row_num + 1, column=col_num)
             cell.value = str(cell_value)
 
-    file_path = f'/excel/{task.name}.xlsx'
-
-    output = BytesIO()
-    workbook.save(output)
-
-    url = upload_to_dropbox(
-        file_path=file_path,
-        file=output,
-    )
-
-    task.update_task_status(
-        status='Success',
-        result=url,
-    )
-
-
-def upload_to_dropbox(file_path, file):
-    # It's working only with temporary access token
-    dbx = Dropbox(
-        'sl.Bq2LpA7djRMSvdwAiVsylCE9_fWWLo9E_GdUMJBxw4qlarmVi_cW5J1VI2T9PLjU_i'
-        '3KLKk7oKhvzm55szz67kSICy3Blt8vSYoBYxFW_30OwNGsiE_lS1N_S9-AxQL4YzjgEE2'
-        'DUtjKdUKDa93W',
-    )
-
+    file_name = f'{task_result.name}.xlsx'
     try:
-        dbx.files_upload(
-            file.getvalue(),
-            file_path,
-        )
-        return dbx.files_get_temporary_link(file_path).link
+        os.mkdir(f'{settings.BASE_DIR}/excel')
+    except FileExistsError:
+        pass
 
-    except ApiError as exc:
-        if isinstance(exc.error, UploadError):
-            dbx.files_delete(file_path)
-            dbx.files_upload(
-                file.getvalue(),
-                file_path,
-            )
-            return dbx.files_get_temporary_link(file_path).link
+    file_path = os.path.join(settings.BASE_DIR, f'excel/{file_name}')
+    workbook.save(file_path)
 
-        else:
-            return str(exc)
+    task_result.result_link = file_path
+    task_result.status = 'SUCCEED'
+    time_after = datetime.now()
+    task_result.duration = time_after - task_result.start_date
+    task_result.save()
