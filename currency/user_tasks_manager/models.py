@@ -1,5 +1,6 @@
 import uuid
 
+from converter.models import Source
 from converter.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -66,19 +67,20 @@ class UserTask(models.Model):
         blank=True,
         null=True,
     )
-    sources = ArrayField(
-        base_field=models.CharField(max_length=10),
-        default=list,
+    sources = models.ManyToManyField(
+        Source,
+        related_name='user_tasks',
+        related_query_name='user_task',
         verbose_name='Sources',
+        help_text='Source where the currency data was taken',
         blank=True,
-        null=True,
     )
-    updated_by = ArrayField(
-        base_field=models.CharField(max_length=100),
-        default=list,
+    updated_by = models.ManyToManyField(
+        User,
+        related_name='updates_made',
+        related_query_name='update_made',
         verbose_name='Updated by',
         blank=True,
-        null=True,
     )
 
 

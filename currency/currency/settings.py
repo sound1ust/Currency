@@ -157,6 +157,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'currency_user_tasks_manager': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     },
 }
 
