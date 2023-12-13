@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'converter',
+    'user_tasks_manager',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +153,11 @@ LOGGING = {
     },
     'loggers': {
         'currency_converter': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'currency_user_tasks_manager': {
             'handlers': ['file', 'console'],
             'level': 'INFO',
             'propagate': True,

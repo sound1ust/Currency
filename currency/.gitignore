@@ -3,3 +3,5 @@ celerybeat-schedule.db
 dump.rdb
 venv
 converter_logging.log
+!/excel/
+!/user_tasks_manager/migrations/.old/
